@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+// Si l'utilisateur est un admin, afficher le contenu de la page admin
+echo "Page Admin : Accès autorisé";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   var_dump($_SESSION);
@@ -18,7 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['email'] = $email;
     $_SESSION['role'] = $role_stock;
   }
+
+
   // Redirection basée sur le rôle
+
+  if (!isset($_SESSION['role']) || $_SESSION['role'] === 'utilisateur') {
+    // Rediriger l'utilisateur vers la page d'accueil si ce n'est pas un admin
+    header("Location: index.php");
+}
 
   if (isset($_SESSION['role'])) {
     if ($_SESSION["role"] === "admin") {
@@ -26,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 }
+
 ?>
 
 <form class="h-screen flex items-center justify-center" method="POST">
