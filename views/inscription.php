@@ -1,11 +1,6 @@
 <?php
 // Connexion à la base de données 
-$conn = new mysqli("localhost", "root", "", "evenements");
-
-// Vérifier la connexion
-if ($conn->connect_error) {
-    die("Échec de connexion : " . $conn->connect_error);
-}
+require_once "./config/database.php";
 
 // Vérifier si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -18,20 +13,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Vérifier si l'email est déjà utilisé
     $sql = "SELECT id FROM user WHERE email = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->store_result();
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$email]);
 
-    if ($stmt->num_rows > 0) {
+    $user = $stmt->fetch();
+
+    if ($user) {
         echo "<script>alert('Cet email est déjà utilisé.');</script>";
     } else {
         // Insérer l'utilisateur
-        $sql = "INSERT INTO user (nom, prenom, email, mot_de_passe, role) VALUES (?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssss", $nom, $prenom, $email, $mot_de_passe, $role);
+        $sql = "INSERT INTO user (nom, prenom, email, mot_de_passe, role) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
 
-        if ($stmt->execute()) {
+        if ($stmt->execute([$nom, $prenom, $email, $mot_de_passe, $role])) {
             header("Location: index.php?message=inscription_reussie");
             exit();
         } else {
@@ -39,10 +33,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
     }
-
-    // Fermer la connexion
-    $stmt->close();
-    $conn->close();
 }
 ?>
 
