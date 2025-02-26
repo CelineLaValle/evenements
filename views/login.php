@@ -1,17 +1,28 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+require './config/database.php';
+
+$error = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-  var_dump($_SESSION);
-  var_dump($_POST['email']);
+  // var_dump($_SESSION);
+  // var_dump($_POST['email']);
   $email = $_POST['email'];
   $password = $_POST['password'];
 
-  // Identifiants stockés
-  $email_stocke = "azerty@azerty.fr";
-  $password_stocke = "azerty";
-  $role_stock = "admin";
+  // Connexion à la BDD
+  $stmt = $pdo->prepare("SELECT * FROM user WHERE email = :email");
+  $stmt->execute(['email' => $email]);
+  $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  // // Identifiants stockés
+  // $email_stocke = "azerty@azerty.fr";
+  // $password_stocke = "azerty";
+  // $role_stock = "admin";
 
   // Vérifier les identifiants
   if ($email === $email_stocke && $password === $password_stocke) {
@@ -19,26 +30,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['role'] = $role_stock;
   }
 
+  // Si un utilisateur est trouvé
+  if ($user) {
+    // Vérification du mot de passe (assure-toi que les mots de passe sont hashés avec password_hash en BDD)
+    if (password_verify($password, $user['mot_de_passe'])) {
+      $_SESSION['email'] = $user['email'];
+      $_SESSION['role'] = $user['role']; // Assurez-vous que la colonne `role` existe en BDD
 
-  // Redirection basée sur le rôle
-
-  if (!isset($_SESSION['role']) || $_SESSION['role'] === 'utilisateur') {
-    // Rediriger l'utilisateur vers la page d'accueil si ce n'est pas un admin
-    header("Location: index.php");
-}
-
-  if (isset($_SESSION['role'])) {
-    if ($_SESSION["role"] === "admin") {
-      header('Location: ?page=page_admin');
+      // Redirection basée sur le rôle
+      if ($_SESSION['role'] === 'admin') {
+        header('Location: ?page=page_admin');
+        exit();
+      } else {
+        header("Location: index.php");
+        exit();
+      }
+    } else {
+      $error = "Mot de passe incorrect";
     }
+  } else {
+    $error = "Utilisateur non trouvé";
   }
 }
-
 ?>
 
 <form class="h-screen flex items-center justify-center" method="POST">
   <div class="text-center">
     <h1 class="text-2xl mb-6 font-['Irish_Grover']">Se Connecter</h1>
+    <?php if (!empty($error)): ?>
+      <p class="text-red-500 font-bold mb-4"><?php echo $error; ?></p>
+    <?php endif; ?>
     <input type="email" name="email" placeholder="Identifiant" class="block w-64 mx-auto mb-4 p-2 rounded-[20px] bg-[#82D9E9] text-center text-gray-500 font-['Irish_Grover']">
     <input type="password" name="password" placeholder="Mot De Passe" class="block w-64 mx-auto mb-4 p-2 rounded-[20px] bg-[#82D9E9] text-center text-gray-500 font-['Irish_Grover']">
     <a href="?page=inscription" class="block mb-6 ml-[170px] text-gray-500 font-['Irish_Grover']">S'inscrire</a>
