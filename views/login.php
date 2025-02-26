@@ -1,9 +1,6 @@
 <?php
 session_start();
 
-// Si l'utilisateur est un admin, afficher le contenu de la page admin
-echo "Page Admin : Accès autorisé";
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   var_dump($_SESSION);
