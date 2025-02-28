@@ -24,12 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // $password_stocke = "azerty";
   // $role_stock = "admin";
 
-  // Vérifier les identifiants
-  if ($email === $email_stocke && $password === $password_stocke) {
-    $_SESSION['email'] = $email;
-    $_SESSION['role'] = $role_stock;
-  }
-
   // Si un utilisateur est trouvé
   if ($user) {
     // Vérification du mot de passe (assure-toi que les mots de passe sont hashés avec password_hash en BDD)
