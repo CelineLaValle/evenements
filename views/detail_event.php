@@ -53,4 +53,3 @@ if (isset($_GET['id'])) {
     echo "<p class='text-red-500'>ID d'événement non fourni.</p>";
 }
 
-?>

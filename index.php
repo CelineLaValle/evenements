@@ -10,6 +10,10 @@ if (isset($_GET['message'])) {
         echo "<div style='background-color: #f8d7da; color: #721c24; padding: 10px; text-align: center; border-radius: 5px;'>
                 Erreur lors de l'inscription. Veuillez réessayer.
               </div>";
+    } elseif ($_GET['message'] == "erreur_inscription_email_utilise") {
+        echo "<div style='background-color: #f8d7da; color: #721c24; padding: 10px; text-align: center; border-radius: 5px;'>
+                Cet email est déjà utilisé.
+              </div>";
     }
 }
 

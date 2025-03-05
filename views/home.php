@@ -9,15 +9,15 @@ $evenementsParPage = 4;
 // Récupérer la page actuelle pour la pagination
 $pagination = isset($_GET['pagination']) && $_GET['pagination'] > 0 ? (int)$_GET['pagination'] : 1;
 
+// Définir le tri par défaut (date si aucun tri défini)
+$tri = isset($_GET['tri']) ? $_GET['tri'] : 'date';
+
+// Vérifier que le tri est valide pour éviter les injections SQL
+$colonnes_valides = ['date', 'heure'];
+$tri = in_array($tri, $colonnes_valides) ? $tri : 'date';
+
 // Calculer l'offset (toujours positif ou 0)
 $offset = max(0, ($pagination - 1) * $evenementsParPage);
-
-// Requête pour récupérer les événements avec la pagination
-$stmt = $pdo->prepare("SELECT * FROM evenements ORDER BY id ASC LIMIT :limit OFFSET :offset");
-$stmt->bindValue(':limit', $evenementsParPage, PDO::PARAM_INT);
-$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-$stmt->execute();
-$evenements = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Récupérer le nombre total d'événements pour la pagination
 $stmtTotal = $pdo->query("SELECT COUNT(*) FROM evenements");
@@ -30,16 +30,16 @@ $totalPages = ceil($totalEvents / $evenementsParPage);
 if ($pagination > $totalPages) {
     $pagination = $totalPages;
 }
+
+// Récupérer les événements triés et paginés
+$sql = "SELECT * FROM evenements ORDER BY $tri ASC LIMIT :limit OFFSET :offset";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(':limit', $evenementsParPage, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$evenements = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
-
-
-
-    <?php
-    if (isset($_GET['message']) && $_GET['message'] === 'ajout_reussi') {
-        echo "<p style='color: green;'>Événement ajouté avec succès !</p>";
-    }
-    ?>
-
 
 <!-- Affichage des événements -->
 <div class="flex flex-wrap items-center justify-center w-full gap-10 p-8">
@@ -67,16 +67,17 @@ if ($pagination > $totalPages) {
     <?php endforeach; ?>
 </div>
 
-
 <!-- Pagination -->
 <div class="mb-4 flex justify-center items-center mt-4 space-x-4">
     <?php if ($pagination > 1) : ?>
-        <a href="?page=home&pagination=<?= $pagination - 1 ?>" class="px-4 py-2 bg-[#82D9E9] rounded-lg shadow-md">Précédent</a>
+        <a href="?page=home&pagination=<?= $pagination - 1 ?>&tri=<?= $tri ?>" 
+           class="px-4 py-2 bg-[#82D9E9] rounded-lg shadow-md">Précédent</a>
     <?php endif; ?>
 
     <!-- Sélecteur avec "X / Y" -->
     <form method="GET">
         <input type="hidden" name="page" value="home">
+        <input type="hidden" name="tri" value="<?= $tri ?>">
         <select name="pagination" class="px-3 py-2 border rounded-lg" onchange="this.form.submit()">
             <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
                 <option value="<?= $i ?>" <?= $i == $pagination ? 'selected' : '' ?>>
@@ -87,17 +88,17 @@ if ($pagination > $totalPages) {
     </form>
 
     <?php if ($pagination < $totalPages) : ?>
-        <a href="?page=home&pagination=<?= $pagination + 1 ?>" class="px-4 py-2 bg-[#82D9E9] rounded-lg shadow-md">Suivant</a>
+        <a href="?page=home&pagination=<?= $pagination + 1 ?>&tri=<?= $tri ?>" 
+           class="px-4 py-2 bg-[#82D9E9] rounded-lg shadow-md">Suivant</a>
     <?php endif; ?>
 </div>
 
-
-<!-- Bouton d'ajout d'événement (visible uniquement pour les organisateurs) -->
-
-    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'organisateur'): ?>
-        <a href="?page=add_event">
-            <button class="h-[50px] w-[250px] bg-[#82D9E9] text-black text-[20px] py-2 px-4 rounded-[20px] shadow-md font-['Irish_Grover'] mb-5 ml-4">
-                Ajouter un événement
-            </button>
-        </a>
-    <?php endif; ?>
+<!-- Formulaire de tri -->
+<form method="GET">
+    <input type="hidden" name="page" value="home">
+    <label for="tri">Trier par :</label>
+    <select name="tri" onchange="this.form.submit()">
+        <option value="date" <?= $tri == 'date' ? 'selected' : '' ?>>Date</option>
+        <option value="heure" <?= $tri == 'heure' ? 'selected' : '' ?>>Heure</option>
+    </select>
+</form>

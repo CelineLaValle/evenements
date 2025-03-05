@@ -17,25 +17,26 @@ if (isset($_SESSION['id_user']) && $_SESSION['role'] === 'utilisateur') {
         $inscrit = $stmtCheckInscription->fetch(PDO::FETCH_ASSOC);
 
 
- 
+
 
 
         if ($inscrit) {
             // Si l'utilisateur est inscrit, afficher le bouton pour se désinscrire
-            ?>
+?>
             <form method="POST">
                 <input type="hidden" name="id_evenements" value="<?= $eventId ?>">
+                <p>Vous êtes inscrit à cet événement !</p>
                 <button type="submit" name="unregister" class="bg-red-500 text-white py-2 px-4 rounded-lg">Se désinscrire</button>
             </form>
-            <?php
+        <?php
         } else {
             // Sinon, afficher le bouton pour s'inscrire
-            ?>
+        ?>
             <form method="POST">
                 <input type="hidden" name="id_evenements" value="<?= $eventId ?>">
                 <button type="submit" name="register" class="bg-green-500 text-white py-2 px-4 rounded-lg">S'inscrire</button>
             </form>
-            <?php
+<?php
         }
 
         // Traitement de l'inscription
@@ -46,6 +47,9 @@ if (isset($_SESSION['id_user']) && $_SESSION['role'] === 'utilisateur') {
                 $stmtInscription->bindValue(':id_evenements', $eventId, PDO::PARAM_INT);
                 $stmtInscription->bindValue(':id_user', $_SESSION['id_user'], PDO::PARAM_INT);
                 $stmtInscription->execute();
+                
+                header("Location: ?page=detail_event&id=$eventId");
+        
 
                 // Message de confirmation
                 echo "<p class='text-green-500'>Vous êtes inscrit à cet événement !</p>";
@@ -62,6 +66,8 @@ if (isset($_SESSION['id_user']) && $_SESSION['role'] === 'utilisateur') {
                 $stmtDesinscription->bindValue(':id_evenements', $eventId, PDO::PARAM_INT);
                 $stmtDesinscription->bindValue(':id_user', $_SESSION['id_user'], PDO::PARAM_INT);
                 $stmtDesinscription->execute();
+
+                header("Location: ?page=detail_event&id=$eventId");
 
                 // Message de confirmation
                 echo "<p class='text-red-500'>Vous êtes désinscrit de cet événement.</p>";

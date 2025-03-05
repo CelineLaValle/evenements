@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Vérification de l'accès
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'organisateur') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: index.php");
     exit;
 }
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Récupération de l'ID de l'organisateur
-    $stmt = $pdo->prepare("SELECT id FROM user WHERE email = :email");
+    $stmt = $pdo->prepare("SELECT id_user FROM user WHERE email = :email");
     $stmt->execute(['email' => $organisateur_email]);
     $organisateur = $stmt->fetch(PDO::FETCH_ASSOC);
 

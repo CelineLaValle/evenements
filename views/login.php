@@ -28,16 +28,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($user) {
     // Vérification du mot de passe (assure-toi que les mots de passe sont hashés avec password_hash en BDD)
     if (password_verify($password, $user['mot_de_passe'])) {
-      $_SESSION['email'] = $user['email'];
-      $_SESSION['role'] = $user['role']; // Assurez-vous que la colonne `role` existe en BDD
-
-      // Redirection basée sur le rôle
-      if ($_SESSION['role'] === 'admin') {
-        header('Location: ?page=page_admin');
-        exit();
+      // Vérification si l'utilisateur est suspendu
+      if ($user['suspendu'] == 1) {
+        $error = "Votre compte est suspendu. Contactez un administrateur.";
       } else {
-        header("Location: index.php");
-        exit();
+        // Si l'utilisateur n'est pas suspendu, on crée la session
+        $_SESSION['id_user'] = $user['id_user'];
+        $_SESSION['email'] = $user['email'];
+        $_SESSION['role'] = $user['role']; // Assurez-vous que la colonne `role` existe en BDD
+
+        // Redirection basée sur le rôle
+        if ($_SESSION['role'] === 'admin') {
+          header('Location: ?page=page_admin');
+          exit();
+        } else {
+          header("Location: index.php");
+          exit();
+        }
       }
     } else {
       $error = "Mot de passe incorrect";
