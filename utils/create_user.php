@@ -38,7 +38,7 @@ function ajouterUtilisateur($pdo, $nom, $prenom, $email, $mot_de_passe, $role = 
 function modifierUtilisateur($pdo, $id, $nom, $prenom, $email, $mot_de_passe, $role = 'utilisateur') {
     if (!empty($nom) && !empty($prenom) && !empty($email) && !empty($mot_de_passe)) {
         $mot_de_passe = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hachage du mot de passe
-        $sql = "UPDATE user SET nom = ?, prenom = ?, mail = ?, mot_de_passe = ?, role = ?, WHERE id_user = ?";
+        $sql = "UPDATE user SET nom = ?, prenom = ?, email = ?, mot_de_passe = ?, role = ? WHERE id_user = ?";
         $stmt = $pdo->prepare($sql);
         return $stmt->execute([$nom, $prenom, $email, $mot_de_passe, $role, $id]);
     }

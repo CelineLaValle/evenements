@@ -1,6 +1,6 @@
 <?php
 require './config/database.php';
-var_dump($_SESSION);
+
 // Vérifier si l'utilisateur est connecté et a le rôle "utilisateur"
 if (isset($_SESSION['id_user']) && $_SESSION['role'] === 'utilisateur') {
 
