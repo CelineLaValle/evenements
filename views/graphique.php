@@ -42,30 +42,28 @@ function calculateArcPoints($cx, $cy, $r, $angleStart, $angleEnd) {
 }
 ?>
 
-<!-- Code HTML pour le graphique SVG agrandi -->
+
 <div class="flex justify-center items-center min-h-screen">
     <!-- Graphique SVG -->
     <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
         <circle cx="300" cy="300" r="240" stroke="black" stroke-width="20" fill="none" />
         
         <?php
-        // Organisateurs (couleur 87EAE5)
+        // Organisateurs
         list($x1, $y1, $x2, $y2) = calculateArcPoints(300, 300, 240, 0, $organisateurs_angle);
         ?>
         <path d="M300,300 L<?= $x1 ?> <?= $y1 ?> A240,240 0 <?= ($organisateurs_angle > 180) ? 1 : 0 ?>,1 <?= $x2 ?> <?= $y2 ?> Z" 
               fill="#87EAE5" />
         
         <?php
-        // Utilisateurs (couleur E9BDCC)
+        // Utilisateurs
         list($x1, $y1, $x2, $y2) = calculateArcPoints(300, 300, 240, $organisateurs_angle, $organisateurs_angle + $utilisateurs_angle);
         ?>
         <path d="M300,300 L<?= $x1 ?> <?= $y1 ?> A240,240 0 <?= ($utilisateurs_angle > 180) ? 1 : 0 ?>,1 <?= $x2 ?> <?= $y2 ?> Z" 
               fill="#E9BDCC" />
 
-        <!-- Texte au centre du graphique -->
-        <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="36" fill="black">
             <?= round($organisateurs_percent + $utilisateurs_percent, 2) ?>%
-        </text>
+        </text> -->
     </svg>
 
     <!-- Légende -->
