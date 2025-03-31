@@ -1,17 +1,7 @@
+<div class="min-h-[calc(100vh-100px)] flex flex-col bg-[url('./public/assets/logo.png')] bg-no-repeat bg-center bg-auto">
+    <h1 class="text-3xl m-6">Page Administrateur</h1>
 
-
-    <h1 class="text-3xl">Page Administrateur</h1>
-
-    <?php include './views/bouton.php' ?>
-
-    <!-- <div class="flex items-center space-x-4">
-        <button class="h-[50px] w-[145px] bg-[#82D9E9] text-black text-[16px] py-2 px-4 rounded-[20px] shadow-md font-['Irish_Grover']">
-            <a href="?page=graphique">Graphique</a>
-        </button>
-        <button class="h-[50px] w-[145px] bg-[#82D9E9] text-black text-[16px] py-2 px-4 rounded-[20px] shadow-md font-['Irish_Grover']">
-            <a href="?page=home">Évènements</a>
-        </button>
-        <button class="h-[50px] w-[145px] bg-[#82D9E9] text-black text-[16px] py-2 px-4 rounded-[20px] shadow-md font-['Irish_Grover']">Organisateurs</button>
-        <button class="h-[50px] w-[145px] bg-[#82D9E9] text-black text-[16px] py-2 px-4 rounded-[20px] shadow-md font-['Irish_Grover']">Utilisateurs</button>
-    </div> -->
-
+    <div class="mb-6">
+        <?php include './views/bouton.php'; ?>
+    </div>
+</div>

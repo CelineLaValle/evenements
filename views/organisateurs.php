@@ -49,9 +49,9 @@ $organisateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
  <div class="m-6">
 <h2 class="text-2xl font-semibold mt-4 mb-4">Ajouter un Organisateur</h2>
 <form method="post" class="mb-5 space-y-2">
-    <input type="text" name="nom" placeholder="Nom" required class="border border-gray-700 p-2 rounded">
-    <input type="text" name="tel" placeholder="Téléphone" required class="border border-gray-700 p-2 rounded">
-    <button type="submit" name="ajouter" class="bg-[#82D9E9] text-black px-4 py-2 rounded-[20px] shadow-md font-['Irish_Grover']">Ajouter</button>
+    <input type="text" name="nom" placeholder="Nom" required class="border border-gray-700 p-2 m-2 rounded">
+    <input type="text" name="tel" placeholder="Téléphone" required class="border border-gray-700 p-2 m-2 rounded">
+    <button type="submit" name="ajouter" class="bg-[#82D9E9] text-black px-6 py-2 ml-2 rounded-[20px] shadow-md font-['Irish_Grover']">Ajouter</button>
 </form>
  </div>
 

@@ -6,7 +6,7 @@ require './config/database.php';
 
 if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
     <a href="?page=add_event">
-        <button class="h-[50px] w-[250px] bg-[#E9BDCC] text-black text-[20px] py-2 px-4 rounded-[20px] shadow-md font-['Irish_Grover'] m-6">
+        <button class="h-[50px] w-[250px] bg-[#E9BDCC] text-black text-[20px] py-2 px-4 rounded-[20px] shadow-md font-['Irish_Grover'] mt-6 ml-6">
             Ajouter un événement
         </button>
     </a>
