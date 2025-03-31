@@ -1,5 +1,3 @@
-<h1> Graphique </h1>
-
 <?php include './views/bouton.php' ?>
 <?php
 // Connexion à la base de données
