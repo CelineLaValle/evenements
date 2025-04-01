@@ -20,7 +20,17 @@ if (isset($_GET['message'])) {
 include "./templates/header.php"; 
 
     $page = $_GET["page"]??"home";
-    include ("./views/$page.php");
+
+
+    // Vérifier si la page demandée existe
+$page_path = "./views/$page.php";  // Définir la variable de chemin
+    // Si la page existe, l'inclure, sinon rediriger vers 404
+if (file_exists($page_path)) {
+    include $page_path;
+} else {
+    // Rediriger vers la page 404 si la page n'existe pas
+    include "./views/404.php";
+}
 
     include "./templates/footer.php";
 ?>

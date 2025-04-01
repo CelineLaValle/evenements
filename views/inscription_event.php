@@ -47,9 +47,13 @@ if (isset($_SESSION['id_user']) && $_SESSION['role'] === 'utilisateur') {
                 $stmtInscription->bindValue(':id_evenements', $eventId, PDO::PARAM_INT);
                 $stmtInscription->bindValue(':id_user', $_SESSION['id_user'], PDO::PARAM_INT);
                 $stmtInscription->execute();
-                
+
                 header("Location: ?page=detail_event&id=$eventId");
-        
+
+                // Diminuer le nombre de places disponibles
+                $stmtUpdatePlaces = $pdo->prepare("UPDATE evenements SET nombre_de_place = nombre_de_place - 1 WHERE id = :id_evenements AND nombre_de_place > 0");
+                $stmtUpdatePlaces->bindValue(':id_evenements', $eventId, PDO::PARAM_INT);
+                $stmtUpdatePlaces->execute();
 
                 // Message de confirmation
                 echo "<p class='text-green-500'>Vous êtes inscrit à cet événement !</p>";
@@ -57,6 +61,7 @@ if (isset($_SESSION['id_user']) && $_SESSION['role'] === 'utilisateur') {
                 echo "<p class='text-yellow-500'>Vous êtes déjà inscrit à cet événement.</p>";
             }
         }
+
 
         // Traitement de la désinscription
         if (isset($_POST['unregister'])) {
@@ -68,6 +73,12 @@ if (isset($_SESSION['id_user']) && $_SESSION['role'] === 'utilisateur') {
                 $stmtDesinscription->execute();
 
                 header("Location: ?page=detail_event&id=$eventId");
+
+                // Augmenter le nombre de places disponibles
+                $stmtUpdatePlaces = $pdo->prepare("UPDATE evenements SET nombre_de_place = nombre_de_place + 1 WHERE id = :id_evenements");
+                $stmtUpdatePlaces->bindValue(':id_evenements', $eventId, PDO::PARAM_INT);
+                $stmtUpdatePlaces->execute();
+
 
                 // Message de confirmation
                 echo "<p class='text-red-500'>Vous êtes désinscrit de cet événement.</p>";

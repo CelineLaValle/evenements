@@ -32,7 +32,11 @@ if ($pagination > $totalPages) {
 }
 
 // Récupérer les événements triés et paginés
-$sql = "SELECT * FROM evenements ORDER BY $tri ASC LIMIT :limit OFFSET :offset";
+if ($tri == 'heure') {
+    $sql = "SELECT * FROM evenements ORDER BY TIME(heure) ASC, DATE(date) ASC LIMIT :limit OFFSET :offset";
+} else {
+    $sql = "SELECT * FROM evenements ORDER BY DATE(date) ASC, TIME(heure) ASC LIMIT :limit OFFSET :offset";
+}
 $stmt = $pdo->prepare($sql);
 $stmt->bindValue(':limit', $evenementsParPage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
@@ -94,11 +98,13 @@ $evenements = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <!-- Formulaire de tri -->
-<form method="GET">
+<form method="GET" class="flex items-center space-x-4 p-4 bg-[#f1f1f1] rounded-lg shadow-lg">
     <input type="hidden" name="page" value="home">
-    <label for="tri">Trier par :</label>
-    <select name="tri" onchange="this.form.submit()">
-        <option value="date" <?= $tri == 'date' ? 'selected' : '' ?>>Date</option>
-        <option value="heure" <?= $tri == 'heure' ? 'selected' : '' ?>>Heure</option>
+
+    <label for="tri" class="text-lg font-semibold text-gray-700">Trier par :</label>
+
+    <select name="tri" onchange="this.form.submit()" class="border border-gray-300 p-2 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-[#82D9E9]">
+        <option value="date" <?= $tri == 'date' ? 'selected' : '' ?> class="text-gray-700">Date</option>
+        <option value="heure" <?= $tri == 'heure' ? 'selected' : '' ?> class="text-gray-700">Heure</option>
     </select>
 </form>
