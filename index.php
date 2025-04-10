@@ -1,5 +1,7 @@
-
 <?php 
+
+ob_start();
+session_start(); 
 
 if (isset($_GET['message'])) {
     if ($_GET['message'] == "inscription_reussie") {
@@ -34,5 +36,7 @@ if (file_exists($page_path)) {
 
     include "./templates/footer.php";
 ?>
+
+<?php ob_end_flush(); ?>
 
 
